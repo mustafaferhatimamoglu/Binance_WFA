@@ -9,7 +9,7 @@ namespace Binance_WFA.Configs
     internal class ConfigSecret
     {
         //Hmac230611
-        string apiKey = "XXX2";
+        string apiKey = "XXX3";
         string secretKey = "XXXX";
     }
 }
