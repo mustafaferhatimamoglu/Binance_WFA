@@ -3,8 +3,7 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-Configs\ConfigSecret.cs
-#C:\Users\user\source\repos\Binance_WFA\Configs\ConfigSecret.cs
+
 
 # User-specific files
 *.rsuser
