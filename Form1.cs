@@ -53,7 +53,7 @@ namespace Binance_WFA
                 times.Add(i + "_" + serverTime+"_"+ DateTime.Now.ToString("yyyyMMddHHmmssff"));
 
                 // HMAC signature
-                var aaa = new SpotAccountTrade(httpClient, new BinanceHmac(secretKey), apiKey: apiKey);
+                //var aaa = new SpotAccountTrade(httpClient, new BinanceHmac(secretKey), apiKey: apiKey);
 
 
             }
