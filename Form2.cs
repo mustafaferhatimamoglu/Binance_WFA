@@ -19,6 +19,7 @@ namespace Binance_WFA
         public readonly BackgroundWorker bgW_CheckServerTime = new();
         public Form2()
         {
+            var aaa = DateTimeOffset.FromUnixTimeMilliseconds((long)System.Convert.ToDouble(1640995200000)).DateTime;
             InitializeComponent();
             bgW_CheckServerTime.DoWork += new System.ComponentModel.DoWorkEventHandler(bgW_CheckServerTime_DoWork);
             bgW_CheckServerTime.RunWorkerAsync();
