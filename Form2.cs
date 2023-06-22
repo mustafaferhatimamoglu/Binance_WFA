@@ -47,6 +47,7 @@ namespace Binance_WFA
                     null,
                     1000);
                 asd3 = asd3.Replace("],[", "\n");
+                asd4 = asd4.Replace("],[", "\n");
 
                 DateTime serverDateTime = DateTimeOffset.FromUnixTimeMilliseconds((long)System.Convert.ToDouble(serverTime.Split(":")[1].Split("}")[0])).DateTime;
                 DateTime localDateTime = serverDateTime.ToLocalTime();
