@@ -35,11 +35,22 @@ namespace Binance_WFA
                 var asd = await market.CurrentAveragePrice("BTCUSDT");
                 var asd2 = await market.RollingWindowPriceChangeStatistics("BTCUSDT");
                 var asd3 = await market.KlineCandlestickData(
-                    "BTCUSDT", 
-                    Interval.ONE_MINUTE, 
-                    (long)System.Convert.ToDouble(serverTime.Split(":")[1].Split("}")[0]) - 1000 * 60 * 60 * 24, 
+                    "BTCUSDT",
+                    Interval.ONE_MINUTE,
+                    (long)System.Convert.ToDouble(serverTime.Split(":")[1].Split("}")[0]) - 1000 * 60 * 60 * 24,
                     (long)System.Convert.ToDouble(serverTime.Split(":")[1].Split("}")[0]),
                     100000);
+                var asd4 = await market.KlineCandlestickData(
+                    "BTCUSDT",
+                    Interval.ONE_MINUTE,
+                    (long)System.Convert.ToDouble(serverTime.Split(":")[1].Split("}")[0]) - 1000 * 60 * 60 * 24,
+                    null,
+                    1000);
+                asd3 = asd3.Replace("],[", "\n");
+
+                DateTime serverDateTime = DateTimeOffset.FromUnixTimeMilliseconds((long)System.Convert.ToDouble(serverTime.Split(":")[1].Split("}")[0])).DateTime;
+                DateTime localDateTime = serverDateTime.ToLocalTime();
+                Console.WriteLine(localDateTime);
                 Console.WriteLine(serverTime);
                 Invoke(new Action(delegate () { Update_UI_Work(); }));
                 //richTextBox1.Text = serverTime;
