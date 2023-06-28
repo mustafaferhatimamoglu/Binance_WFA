@@ -14,13 +14,15 @@ using System.Xml.Serialization;
 
 namespace Binance_WFA
 {
-    public partial class Form3 : Form
+    public partial class Form3_LINAUSDT : Form
     {
-        public readonly BackgroundWorker bgW_BTCUSDT = new();
+        public readonly BackgroundWorker bgW_LINAUSDT = new();
+        long Time_2022_ORJ = 1640995200000;
         long Time_2022 = 1640995200000;
         long Time_1000_minutes = 60000000;
+        long Time_500_hours =  1800000000; 
         string SQLCon;
-        public Form3()
+        public Form3_LINAUSDT()
         {
             InitializeComponent();
 
@@ -32,9 +34,10 @@ namespace Binance_WFA
                     "; Initial Catalog=" + "BINANCE" +
                     "; USER ID=" + "sa" +
                     ";PASSWORD=" + "sapass" + "";
+            /*
             try
             {
-                var gettime = "\r\n  SELECT TOP 1 Kline_open_time\r\n  FROM [BINANCE].[dbo].[BTCUSDT]\r\n  order by  Kline_open_time desc";
+                var gettime = "\r\n  SELECT TOP 1 Kline_open_time\r\n  FROM [BINANCE].[dbo].[LINAUSDT]\r\n  order by  Kline_open_time desc";
                 var a1 = SQL_query(gettime);
                 var a2 = a1.Rows[0][0];
                 Time_2022 = (long)System.Convert.ToDouble(a2);
@@ -42,24 +45,26 @@ namespace Binance_WFA
             catch (Exception ex)
             {
 
-                throw;
+                //throw;
             }
+            */
 
-            bgW_BTCUSDT.DoWork += new System.ComponentModel.DoWorkEventHandler(bgW_BTCUSDT_DoWorkAsync);
-            bgW_BTCUSDT.RunWorkerAsync();
+            bgW_LINAUSDT.DoWork += new System.ComponentModel.DoWorkEventHandler(bgW_LINAUSDT_DoWorkAsync);
+            bgW_LINAUSDT.RunWorkerAsync();
         }
         Market market = new Market();
-        private async void bgW_BTCUSDT_DoWorkAsync(object? sender, DoWorkEventArgs e)
+        private async void bgW_LINAUSDT_DoWorkAsync(object? sender, DoWorkEventArgs e)
         {
+            long old_Kline_open_time = 0;
             for (int i = 0; i < 1000; i++)
             {
-                Time_2022 = Time_2022 + (i*Time_1000_minutes);
+                Time_2022 = Time_2022_ORJ + (i* Time_500_hours);
                 var RawData = await market.KlineCandlestickData(
-                    "BTCUSDT",
-                    Interval.ONE_MINUTE,
+                    "LINAUSDT",
+                    Interval.ONE_HOUR,
                     Time_2022,
                     null,
-                    1000);
+                    null);
                 var RawData_1 = RawData.Replace("],[", "\n").
                     Replace("[[", "").
                     Replace("]]", "").
@@ -68,8 +73,9 @@ namespace Binance_WFA
                 foreach (var line in DataLine)
                 {
                     var column = line.Split(",");
+
                     string sqlQuery = "" +
-                        "INSERT INTO [dbo].[BTCUSDT]\r\n" +
+                        "INSERT INTO [dbo].[LINAUSDT_HOUR]\r\n" +
 
                         "([Kline_open_time]\r\n,[Open_price]\r\n," +
                         "[High_price]\r\n,[Low_price]\r\n," +
@@ -81,10 +87,11 @@ namespace Binance_WFA
                         "(" + column[0] + "\r\n," + column[1] + "\r\n," +
                         "" + column[2] + " \r\n," + column[3] + "\r\n," +
                         "" + column[4] + "\r\n," + column[5] + "\r\n," +
-                        "" + column[6] + "\r\n," + column[7] + "\r\n," +
+                        "" + ((long)System.Convert.ToDouble(column[0]) - old_Kline_open_time).ToString() + "\r\n," + column[7] + "\r\n," +
                         "" + column[8] + "\r\n," + column[9] + "\r\n," +
                         "" + column[10] + ")";
                     SQL_query(sqlQuery);
+                    old_Kline_open_time = ((long)System.Convert.ToDouble(column[0]));
                 }
             }
         }
